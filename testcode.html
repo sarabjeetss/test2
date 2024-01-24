@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    table {
+      text-align: center;
+      margin-left: 10%;
+      margin-right: 50%;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+
+    h1 {
+      font-style: italic;
+      font-weight: bold;
+    }
+
+    input,
+    button {
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      align: center;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div align="center">
+    <h1>WELCOME TO SINGH SARABJEET RESTAURANT</h1>
+    <h2>Booking your place for your dinner!</h2>
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" size="22" onblur="validateName()">
+    <div id="nameError" class="error"></div>
+
+    <label for="phone">Phone Number</label>
+    <input type="text" id="phone" size="22" onblur="validatePhone()">
+    <div id="phoneError" class="error"></div><br>
+  </div>
+  <br>
+  <div align="margin-left">
+    <h2>Select a time</h2>
+    <input type="radio" id="first" name="seating" value="5" checked>
+    <label for="first">5:00</label><br>
+    <input type="radio" id="second" name="seating" value="6">
+    <label for="second">6:00</label><br>
+    <input type="radio" id="third" name="seating" value="7">
+    <label for="third">7:00</label><br>
+    <input type="radio" id="fourth" name="seating" value="8">
+    <label for="fourth">8:00</label><br>
+    <br>
+    <h2>What would you like to have with us?</h2>
+    <input type="checkbox" id="starters" name="menu" value="Starters">
+    <label for="starters">Starters</label><br>
+    <input type="checkbox" id="Main" name="menu" value="Main Course">
+    <label for="Main">Main Course</label><br>
+    <input type="checkbox" id="dessert" name="menu" value="Dessert">
+    <label for="dessert">Dessert</label><br>
+    <input type="checkbox" id="drinks" name="menu" value="Drinks">
+    <label for="drinks">Drinks</label><br>
+  </div>
+  <button onclick="submitForm()" id="submit" disabled>
+    Submit
+  </button>
+
+  <div id="message" class="error"></div>
+
+
+  <script>
+    function validateName() {
+      var nameInput = document.getElementById('name');
+      var nameError = document.getElementById('nameError');
+      var name = nameInput.value.trim();
+
+      if (name === '') {
+        nameInput.style.borderColor = 'red';
+        nameError.innerHTML = 'Error: Name is empty.';
+      } else if (!name.includes(' ')) {
+        nameInput.style.borderColor = 'red';
+        nameError.innerHTML = 'Error: First and last names are required.';
+      } else {
+        nameInput.style.borderColor = 'white';
+        nameError.innerHTML = '';
+      }
+
+      updateSubmitButton();
+    }
+
+    function validatePhone() {
+      var phoneInput = document.getElementById('phone');
+      var phoneError = document.getElementById('phoneError');
+      var phone = phoneInput.value.trim();
+
+      if (phone === '') {
+        phoneInput.style.borderColor = 'red';
+        phoneError.innerHTML = 'Error: Phone number is empty.';
+      } else if (phone.length !== 6 || isNaN(phone.charAt(0))) {
+        phoneInput.style.borderColor = 'red';
+        phoneError.innerHTML = 'Error: Phone numbers must have exactly 6 characters and start with numbers.';
+      } else {
+        phoneInput.style.borderColor = 'white';
+        phoneError.innerHTML = '';
+      }
+
+      updateSubmitButton();
+    }
+
+    function updateSubmitButton() {
+      var nameInput = document.getElementById('name');
+      var phoneInput = document.getElementById('phone');
+      var submitButton = document.getElementById('submit');
+
+      if (nameInput.style.borderColor === 'white' && phoneInput.style.borderColor === 'white') {
+        submitButton.disabled = false;
+      } else {
+        submitButton.disabled = true;
+      }
+    }
+
+    function submitForm() {
+      var messageDiv = document.getElementById('message');
+      var nameInput = document.getElementById('name');
+      var phoneInput = document.getElementById('phone');
+      var selectedTime = document.querySelector('input[name="seating"]:checked').value;
+      var selectedMenuItems = getSelectedMenuItems();
+
+      if (nameInput.style.borderColor === 'white' && phoneInput.style.borderColor === 'white') {
+        messageDiv.style.color = 'green';
+        messageDiv.innerHTML = 'Reservation for ' + nameInput.value + ', ' + phoneInput.value + ' at ' + selectedTime + '. Menu: ' + selectedMenuItems;
+      } else {
+        messageDiv.style.color = 'red';
+        messageDiv.innerHTML = 'Error: Please correct the highlighted fields.';
+      }
+    }
+
+    function getSelectedMenuItems() {
+      var menuItems = [];
+      var checkboxes = document.querySelectorAll('input[name="menu"]:checked');
+
+      checkboxes.forEach(function (checkbox) {
+        menuItems.push(checkbox.value);
+      });
+
+      return menuItems.join(', ');
+    }
+  </script>
+</body>
+
+</html>
